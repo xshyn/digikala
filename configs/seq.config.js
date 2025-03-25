@@ -1,5 +1,5 @@
-const { default: Sequelize } = require("@sequelize/core");
 const { config } = require("dotenv");
+const { Sequelize } = require("sequelize");
 config()
 
 const options = {
@@ -9,7 +9,10 @@ const options = {
     password: process.env.DB_PASS,
     port: process.env.DB_PORT,
     database: process.env.DB_DATABASE,
-    logging: false
+    logging: false,
+    define: {   
+        freezeTableName: true
+    }
 }
 
 const sequelize = new Sequelize(options)
