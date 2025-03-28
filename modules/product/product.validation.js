@@ -5,7 +5,7 @@ const createProductValidation = validate({
         title: Joi.string().required(),
         price: Joi.number().optional().allow(null),
         discount: Joi.number().optional().allow(null),
-        active_discount: Joi.number().optional().allow(null),
+        active_discount: Joi.boolean().optional().allow(null),
         count: Joi.number().optional().allow(null),
         type: Joi.string().valid(...Object.values(ProductTypes)).required(),
         desc: Joi.string().required(),
@@ -21,7 +21,7 @@ const createProductValidation = validate({
                 color_code: Joi.string().required(),
                 price: Joi.number().required(),
                 discount: Joi.number().optional().allow(null),
-                active_discount: Joi.number().optional().allow(null),
+                active_discount: Joi.boolean().optional().allow(null),
                 count: Joi.number().required(),
             })
         ),
@@ -30,7 +30,7 @@ const createProductValidation = validate({
                 size: Joi.string().required(),
                 price: Joi.number().required(),
                 discount: Joi.number().optional().allow(null),
-                active_discount: Joi.number().optional().allow(null),
+                active_discount: Joi.boolean().optional().allow(null),
                 count: Joi.number().required(),
             })
         ),

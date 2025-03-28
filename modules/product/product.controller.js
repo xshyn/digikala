@@ -81,11 +81,50 @@ async function createProduct(req, res, next) {
                     break;
                 }
         }
+        return res.json({
+            message: "Product Created Successfully"
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+async function getAllProducts(req, res, next) {
+    try {
+        const products = await Product.findAll()
+        return res.json(products)
+    } catch (error) {
+        next(error)
+    }
+
+}
+async function getProductDetailById(req, res, next) {
+    try {
+        const { id } = req.params
+        const product = await Product.findOne({ where: { id }, include: [{ all: true }] })
+        if (!product) throw createHttpError(404, "product not found")
+        return res.json(product)
+    } catch (error) {
+        next(error)
+    }
+
+}
+async function deleteProductById(req, res, next) {
+    try {
+        const { id } = req.params
+        const product = await Product.findByPk(id)
+        if (!product) throw createHttpError(404, "product not found")
+        await product.destroy()
+        res.json({
+            message: "Product Deleted Successfully"
+        })
     } catch (error) {
         next(error)
     }
 }
 
 module.exports = {
-    createProduct
+    createProduct,
+    getAllProducts,
+    getProductDetailById,
+    deleteProductById
 }
