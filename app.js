@@ -2,15 +2,12 @@ const { config } = require("dotenv")
 const express = require("express")
 const { sequelize } = require("./configs/seq.config")
 const { productRoutes } = require("./modules/product/product.routes")
+const { authRoutes } = require("./modules/auth/auth.routes")
+const { syncDb } = require("./common/utils")
 config()
 require("./modules/product/product.model")
-// sequelize.sync({ alter: true })
-//     .then(() => {
-//         console.log("synced successfully");
-//     })
-//     .catch((err) => {
-//         console.log(err.message);
-//     })
+require("./modules/user/user.model")
+syncDb()
 
 
 
@@ -24,6 +21,7 @@ async function main() {
 
     // routes
     app.use("/product", productRoutes)
+    app.use("/auth", authRoutes)
 
     // not found route
     app.use((req, res, next) => {
