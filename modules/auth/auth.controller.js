@@ -3,6 +3,7 @@ const { User, Otp } = require("../user/user.model")
 const otpGenerator = require('otp-generator')
 const { config } = require("dotenv")
 const jwt = require("jsonwebtoken")
+const { RefreshToken } = require("./refreshToken.model")
 config()
 
 async function sendOtp(req, res, next) {
@@ -42,7 +43,7 @@ async function checkOtp(req, res, next) {
         if (!user) throw createHttpError(401, "not found user account")
         const otp = await Otp.findOne({ where: { userId: user.id } })
         if (otp?.code !== code) throw createHttpError(401, "otp code is invalid")
-        if (otp?.expires < new Date()) throw createHttpError(401, "otp is expired")
+        if (otp?.expires.getTime() < new Date().getTime()) throw createHttpError(401, "otp is expired")
 
         const { accessToken, refreshToken } = generateToken({ userId: user.id })
 
@@ -59,15 +60,24 @@ async function checkOtp(req, res, next) {
 
 async function verifyRefreshToken(req, res, next) {
     try {
-        const { refreshToken } = req.body
-        if (!refreshToken) throw {}
+        const { refreshToken: token } = req.body
+        if (!token) throw createHttpError(401, "enter the refresh token")
 
-        const verified = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+        const verified = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET)
 
         if (verified?.userId) {
             const user = await User.findByPk(verified.userId)
-            if (!user) throw {}
-
+            if (!user) throw createHttpError(401, "user does not exist")
+            const existToken = await RefreshToken.findOne({
+                where: {
+                    token
+                }
+            })
+            if(existToken) throw createHttpError(401 , "token expired")
+                await RefreshToken.create({
+                    userId: user.id,
+                    token
+                })
             const { accessToken, refreshToken } = generateToken({ userId: user.id })
 
             return res.json({
@@ -76,6 +86,7 @@ async function verifyRefreshToken(req, res, next) {
                 refreshToken
             })
         }
+        return createHttpError(400, "incorrect refresh token")
 
     } catch (error) {
         next(createHttpError(401, "login to your account"))

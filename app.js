@@ -7,6 +7,7 @@ const { syncDb } = require("./common/utils")
 config()
 require("./modules/product/product.model")
 require("./modules/user/user.model")
+require("./modules/auth/refreshToken.model")
 syncDb()
 
 
