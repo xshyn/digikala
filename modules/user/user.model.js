@@ -15,7 +15,7 @@ const Otp = sequelize.define("otp", {
     timestamps: false
 })
 
-User.hasMany(Otp)
+User.hasMany(Otp, {onDelete:'CASCADE'})
 Otp.belongsTo(User)
 
 module.exports = {
