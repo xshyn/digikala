@@ -6,6 +6,7 @@ const {
   ProductSize,
 } = require("../product/product.model");
 const { DataTypes } = require("sequelize");
+const { Discount } = require("../discount/discount.model");
 
 const Basket = sequelize.define(
   "basket",
@@ -31,6 +32,9 @@ Basket.belongsTo(ProductColor);
 
 ProductSize.hasMany(Basket);
 Basket.belongsTo(ProductSize);
+
+Discount.hasMany(Basket);
+Basket.belongsTo(Discount);
 
 module.exports = {
   Basket,
