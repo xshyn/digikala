@@ -24,3 +24,8 @@ const strategy = new Strategy(
   verifyCallback
 );
 passport.use("jwt", strategy);
+
+module.exports = {
+  passport
+}
+

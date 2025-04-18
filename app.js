@@ -4,6 +4,7 @@ const { sequelize } = require("./configs/seq.config");
 const { productRoutes } = require("./modules/product/product.routes");
 const { authRoutes } = require("./modules/auth/auth.routes");
 const { syncDb } = require("./common/utils");
+const { basketRoutes } = require("./modules/basket/basket.routes");
 config();
 require("./modules/product/product.model");
 require("./modules/user/user.model");
@@ -22,6 +23,7 @@ async function main() {
   // routes
   app.use("/product", productRoutes);
   app.use("/auth", authRoutes);
+  app.use("/basket", basketRoutes);
 
   // not found route
   app.use((req, res, next) => {
