@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../../configs/seq.config");
 const { ProductTypes } = require("../../common/constants");
+const { OrderItem } = require("../order/order.model");
 
 const Product = sequelize.define("product", {
     title: { type: DataTypes.STRING },
@@ -54,6 +55,15 @@ ProductColor.belongsTo(Product)
 
 Product.hasMany(ProductSize)
 ProductSize.belongsTo(Product)
+
+Product.hasMany(OrderItem)
+OrderItem.belongsTo(Product)
+
+ProductColor.hasMany(OrderItem)
+OrderItem.belongsTo(ProductColor)
+
+ProductSize.hasMany(OrderItem)
+OrderItem.belongsTo(ProductSize)
 
 module.exports = {
     Product,

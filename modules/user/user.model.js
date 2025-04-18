@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../../configs/seq.config");
+const { Order } = require("../order/order.model");
 
 const User = sequelize.define("user", {
     fullname: { type: DataTypes.STRING, allowNull: true },
@@ -17,6 +18,9 @@ const Otp = sequelize.define("otp", {
 
 User.hasMany(Otp, {onDelete:'CASCADE'})
 Otp.belongsTo(User)
+
+User.hasMany(Order)
+Order.belongsTo(User)
 
 module.exports = {
     User,
